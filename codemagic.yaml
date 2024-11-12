@@ -2,8 +2,7 @@ workflows:
   ios:
     name: iOS TestFlight Build
     environment:
-      node:
-        version: "18.18.0"
+      node: "18.18.0"
 
     scripts:
       # Install dependencies
