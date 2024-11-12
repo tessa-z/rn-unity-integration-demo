@@ -3,10 +3,10 @@ workflows:
     name: iOS IPA Build
     scripts:
       - name: Install dependencies
-        script: yarn install
+        script: yarn install  # Install React Native dependencies
+      - name: Bundle React Native JS
+        script: npx react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios
       - name: Run Fastlane to build IPA
-        script: bundle exec fastlane build_ipa
+        script: bundle exec fastlane build_ipa  # Runs Fastlane to build IPA
     artifacts:
       - build/ios/ipa/*.ipa  # Collects the IPA file as an artifact
-    xcode-project:
-      path: ios/rnunitynative.xcodeproj  # Specify the correct path to the Xcode project
