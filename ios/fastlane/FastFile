@@ -1,0 +1,15 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Upload the app to TestFlight"
+  lane :beta do
+    # Fetch provisioning profiles and certificates
+    match(type: "appstore")  # Ensure certificates are set up
+
+    # Build the app
+    gym(scheme: "rnunitynative")  # Replace with your app's scheme
+
+    # Upload to TestFlight
+    pilot(upload: "./ios/build/rnunitynative.ipa")
+  end
+end
