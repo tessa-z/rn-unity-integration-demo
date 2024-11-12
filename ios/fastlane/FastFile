@@ -4,7 +4,7 @@ platform :ios do
   desc "Upload the app to TestFlight"
   lane :beta do
     # Fetch provisioning profiles and certificates
-    match(type: "appstore")  # Ensure certificates are set up
+    match(type: "appstore", readonly: true, app_identifier: "org.reactjs.native.example.unitynativedemo")
 
     # Build the app
     gym(scheme: "rnunitynative")  # Replace with your app's scheme
