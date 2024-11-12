@@ -1,20 +1,38 @@
 workflows:
-    react-native-ios:
-        name: React Native iOS
-        max_build_duration: 120
-        instance_type: mac_mini_m2
-        environment:
-            node: v16.11.1
-            xcode: 16.0
-            cocoapods: default
-        scripts:
-            - name: Install npm dependencies
-              script: |
-                npm install
-            - name: Install CocoaPods dependencies
-              script: |
-                cd ios && pod install
-        artifacts:
-            - /tmp/xcodebuild_logs/*.log
-            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+  ios:
+    name: iOS TestFlight Build
+    environment:
+      vars:
+        NODE_VERSION: "18.18.0"  # Adjust to your Node version
+      node:
+        version: "$NODE_VERSION"
+
+    scripts:
+      # Install dependencies
+      - name: Install dependencies
+        script: |
+          yarn install
+          cd ios
+          pod install
+
+      # Build the app and create an IPA file
+      - name: Build and create IPA
+        script: |
+          cd ios
+          xcodebuild -project rnunitynative.xcodeproj -scheme rnunitynative -configuration Release clean archive -archivePath build/rnunitynative.xcarchive
+
+      # Export IPA for TestFlight
+      - name: Export IPA
+        script: |
+          cd ios
+          xcodebuild -exportArchive -archivePath build/rnunitynative.xcarchive -exportPath build -exportOptionsPlist exportOptions.plist
+
+    artifacts:
+      - ios/build/rnunitynative.ipa
+
+    # Optional: Deploy to TestFlight using Fastlane (requires Fastlane setup)
+    publishing:
+      scripts:
+        - name: Deploy to TestFlight
+          script: |
+            fastlane pilot upload --ipa ios/build/rnunitynative.ipa
