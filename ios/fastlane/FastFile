@@ -3,14 +3,22 @@ default_platform(:ios)
 platform :ios do
   desc "Build IPA for manual upload"
   lane :build_ipa do
-    match(type: "appstore")  # Ensure provisioning profiles are set up
+    # Install React Native dependencies
+    sh("yarn install")  # or npm install if you're using npm
 
+    # Bundle JavaScript and assets
+    sh("npx react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios")
+
+    # Ensure provisioning profiles are set up (use match for automatic signing)
+    match(type: "appstore")  # You can use `development` or `adhoc` as needed
+    
+    # Build the IPA using Gym
     gym(
       project: "./ios/rnunitynative.xcodeproj",  # Path to the Xcode project
       scheme: "rnunitynative",  # Scheme name
       configuration: "Release",
-      export_method: "app-store",  # Required for distribution builds
-      output_directory: "./build/ios/ipa"  # Saves the IPA in a known location
+      export_method: "app-store",  # Use app-store for distribution builds
+      output_directory: "./build/ios/ipa"  # Output directory for the IPA
     )
   end
 end
