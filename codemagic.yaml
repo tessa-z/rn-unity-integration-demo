@@ -12,5 +12,5 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa  # Collects the IPA file as an artifact
     xcode-project:
-      automatic-signing: true
-      team-id: PHBEM9XP67  # Replace with your Apple Developer Team ID
+      # Only specify the path to the Xcode project
+      path: ios/rnunitynative.xcodeproj
