@@ -2,10 +2,8 @@ workflows:
   ios:
     name: iOS TestFlight Build
     environment:
-      vars:
-        NODE_VERSION: "18.18.0"  # Adjust to your Node version
       node:
-        version: "$NODE_VERSION"
+        version: "18.18.0"
 
     scripts:
       # Install dependencies
