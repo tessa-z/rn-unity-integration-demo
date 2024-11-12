@@ -1,35 +1,16 @@
 workflows:
-  ios:
-    name: iOS TestFlight Build
+  ios-build:
+    name: iOS IPA Build
     environment:
-      node: "18.18.0"
-
+      vars:
+        APP_STORE_CONNECT_API_KEY: Encrypted(...)
     scripts:
-      # Install dependencies
       - name: Install dependencies
-        script: |
-          yarn install
-          cd ios
-          pod install
-
-      # Build the app and create an IPA file
-      - name: Build and create IPA
-        script: |
-          cd ios
-          xcodebuild -project rnunitynative.xcodeproj -scheme rnunitynative -configuration Release clean archive -archivePath build/rnunitynative.xcarchive
-
-      # Export IPA for TestFlight
-      - name: Export IPA
-        script: |
-          cd ios
-          xcodebuild -exportArchive -archivePath build/rnunitynative.xcarchive -exportPath build -exportOptionsPlist exportOptions.plist
-
+        script: yarn install
+      - name: Run Fastlane to build IPA
+        script: bundle exec fastlane build_ipa
     artifacts:
-      - ios/build/rnunitynative.ipa
-
-    # Optional: Deploy to TestFlight using Fastlane (requires Fastlane setup)
-    publishing:
-      scripts:
-        - name: Deploy to TestFlight
-          script: |
-            fastlane pilot upload --ipa ios/build/rnunitynative.ipa
+      - build/ios/ipa/*.ipa  # Collects the IPA file as an artifact
+    xcode-project:
+      automatic-signing: true
+      team-id: PHBEM9XP67  # Replace with your Apple Developer Team ID
