@@ -1,9 +1,6 @@
 workflows:
   ios-build:
     name: iOS IPA Build
-    environment:
-      vars:
-        APP_STORE_CONNECT_API_KEY: Encrypted(...)
     scripts:
       - name: Install dependencies
         script: yarn install
@@ -12,5 +9,4 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa  # Collects the IPA file as an artifact
     xcode-project:
-      # Only specify the path to the Xcode project
-      path: ios/rnunitynative.xcodeproj
+      path: ios/rnunitynative.xcodeproj  # Specify the correct path to the Xcode project
