@@ -1,15 +1,16 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Upload the app to TestFlight"
-  lane :beta do
-    # Fetch provisioning profiles and certificates
-    match(type: "appstore", readonly: true, app_identifier: "org.reactjs.native.example.unitynativedemo")
+  desc "Build IPA for manual upload"
+  lane :build_ipa do
+    match(type: "appstore")  # Ensure provisioning profiles are set up
 
-    # Build the app
-    gym(scheme: "rnunitynative")  # Replace with your app's scheme
-
-    # Upload to TestFlight
-    pilot(upload: "./ios/build/rnunitynative.ipa")
+    gym(
+      project: "./ios/rnunitynative.xcodeproj",  # Path to the Xcode project
+      scheme: "rnunitynative",  # Scheme name
+      configuration: "Release",
+      export_method: "app-store",  # Required for distribution builds
+      output_directory: "./build/ios/ipa"  # Saves the IPA in a known location
+    )
   end
 end
